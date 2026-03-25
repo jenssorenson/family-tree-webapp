@@ -1,0 +1,585 @@
+{
+  "people": [
+    {
+      "id": "person-jens",
+      "firstName": "Jens",
+      "lastName": "Sorenson",
+      "notes": "Child of Olaf and Joanne Sorenson."
+    },
+    {
+      "id": "person-olaf",
+      "firstName": "Olaf",
+      "lastName": "Sorenson",
+      "notes": "Parent of Jens. Child of Dale and Elizabeth Sorenson."
+    },
+    {
+      "id": "person-joanne",
+      "firstName": "Joanne",
+      "lastName": "Sorenson",
+      "notes": "Parent of Jens. Child of Edgar and Jacqueline Langham."
+    },
+    {
+      "id": "person-dale",
+      "firstName": "Dale",
+      "lastName": "Sorenson",
+      "birthYear": "1925",
+      "deathYear": "2006",
+      "birthPlace": "Racine, Racine, Wisconsin, United States",
+      "notes": "Parent of Olaf. Likely Dale Harry Sorenson, born 29 Oct 1925 in Racine, Wisconsin; child of Harry Nels Sorenson and Emma Flora Timler."
+    },
+    {
+      "id": "person-elizabeth",
+      "firstName": "Betty",
+      "lastName": "Sorenson",
+      "birthYear": "1924",
+      "deathYear": "1989",
+      "birthPlace": "Milwaukee, Milwaukee, Wisconsin, United States",
+      "notes": "Parent of Olaf. Maiden name: Spies. Likely Elizabeth Jane Spies, born 17 Nov 1924 in Milwaukee, Wisconsin; daughter of John Spies Jr. Mother remains unconfirmed; Frances G.M. Conner (married John Spies Jr. 1914 Milwaukee) is a candidate."
+    },
+    {
+      "id": "person-john-spies",
+      "firstName": "John",
+      "lastName": "Spies",
+      "birthYear": "1890",
+      "deathYear": "1965",
+      "birthPlace": "Meidling, Vienna, Austria",
+      "notes": "Parent of Elizabeth Sorenson. Likely John Spies Jr., born 20 Dec 1890 in Meidling, Vienna, Austria; child of John Spies and Katherine Karabec."
+    },
+    {
+      "id": "person-harry-sorenson",
+      "firstName": "Harry Nels",
+      "lastName": "Sorenson",
+      "birthYear": "1898",
+      "deathYear": "1979",
+      "birthPlace": "Menominee, Menominee, Michigan, United States",
+      "deathPlace": "Largo, Florida, United States",
+      "notes": "Parent of Dale Harry Sorenson. Born 10 Dec 1898 in Menominee, Michigan; died 24 Mar 1979 in Largo, Florida; buried in Graceland Cemetery, Racine, Wisconsin. Married Emma Flora Timler on 15 Oct 1924 in Racine, Wisconsin. Lived in Kenosha, Wisconsin in 1940 and Mount Pleasant, Racine, Wisconsin in 1950. Parents: Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-emma-timler",
+      "firstName": "Emma Flora",
+      "lastName": "Timler",
+      "birthYear": "1904",
+      "deathYear": "1990",
+      "birthPlace": "Kovno, Kovno, Russian Empire",
+      "birthDate": "1904-10-12",
+      "deathDate": "1990-11-03",
+      "deathPlace": "Seminole, Florida, United States",
+      "notes": "Parent of Dale Harry Sorenson. Find a Grave memorial gives birth 12 Oct 1904 in Kovno, Russian Empire; death 3 Nov 1990 in Seminole, Florida; buried in Racine, Wisconsin. WikiTree gives birth place as Kovno, Kovno, Russian Empire. Harry and Emma married 15 Oct 1924 in Racine, Wisconsin (per WikiTree)."
+    },
+    {
+      "id": "person-julius-sorenson",
+      "firstName": "Julius Laurentius",
+      "lastName": "Sørensen",
+      "birthYear": "1865",
+      "deathYear": "1932",
+      "birthPlace": "Vesterborg, Halsted Klosters, Denmark",
+      "birthDate": "1865-07-13",
+      "deathDate": "1932-11-06",
+      "notes": "Parent of Harry Nels Sorenson. Born 13 Jul 1865 in Vesterborg, Halsted Klosters, Denmark; died 6 Nov 1932 in Racine, Wisconsin; buried in Graceland Cemetery, Racine, Wisconsin. Married Anna Olsson on 9 Mar 1889 in Vesterborg, Halsted Klosters, Denmark. Immigrated to New York County, New York in 1891. Lived in Vesterborg, Denmark in 1890 and Racine, Wisconsin in 1920. Parents: Søren Nielsen and Johanne Lorentzen. They were the parents of at least 2 sons and 5 daughters."
+    },
+    {
+      "id": "person-anna-olsson",
+      "firstName": "Anna",
+      "lastName": "Olsson",
+      "birthYear": "1867",
+      "deathYear": "1945",
+      "birthPlace": "Sjörup, Malmöhus, Sweden",
+      "notes": "CONFIRMED parent of Harry Nels Sorenson. Born 25 Jun 1867 in Sjörup, Malmöhus, Sweden; died 1 Nov 1945. WikiTree profile confirms Anna (Olsson) Sorenson as spouse of Julius Laurentius Sørensen."
+    },
+    {
+      "id": "person-soren-nielsen",
+      "firstName": "Søren",
+      "lastName": "Nielsen",
+      "notes": "Parent of Julius Laurentius Sørensen. Per Julius's own notes. Søren and Johanne had 7 children: Harry Nels Sorenson (1898–1979), Johanna (1889–1989), Selma Sissa (1890–1969), Ebba Bernadotte (1892–1967), Arthur Julius (1895–1988), Myrtle J (1897–1951), and Lily Ann (1900–1987). Specific birth/death dates and marriage record in Danish parish records (Vesterborg/Halsted) not yet located."
+    },
+    {
+      "id": "person-johanne-lorentzen",
+      "firstName": "Johanne",
+      "lastName": "Lorentzen",
+      "notes": "Parent of Julius Laurentius Sørensen. Per Julius's own notes. Søren and Johanne had 7 children: Harry Nels Sorenson (1898–1979), Johanna (1889–1989), Selma Sissa (1890–1969), Ebba Bernadotte (1892–1967), Arthur Julius (1895–1988), Myrtle J (1897–1951), and Lily Ann (1900–1987). Specific birth/death dates and marriage record in Danish parish records (Vesterborg/Halsted) not yet located."
+    },
+    {
+      "id": "person-nancy-hanson",
+      "firstName": "Nancy Lee",
+      "lastName": "Hanson",
+      "birthYear": "1930",
+      "deathYear": "2015",
+      "birthDate": "1930-10-08",
+      "birthPlace": "Racine, Wisconsin",
+      "deathDate": "2015-06-17",
+      "deathPlace": "Eden Prairie, Minnesota",
+      "notes": "CONFIRMED: obituary from Racine Journal Times (Jun 2015) confirms she was born October 8, 1930 in Racine, Wisconsin to Harry N. Sorenson and Emma (Timler) Sorenson. Died June 17, 2015 at Brookdale of Eden Prairie, MN. Graduated Washington Park High School 1948. Married Bucky Hanson July 22, 1950 at parents home in Racine (Elmwood Park). Member of Holy Communion Lutheran Church. Preceded in death by mother Emma, father Harry, and brother Dale Sorenson. Survived by husband Bucky Hanson and five sons: Dr. David, Steve, Rev. Dana, Jon, and Andrew Hanson. Eight grandchildren."
+    },
+    {
+      "id": "person-bucky-hanson",
+      "firstName": "Edward",
+      "lastName": "Hanson",
+      "nickname": "Bucky",
+      "birthYear": "1930",
+      "birthDate": "1930-07-21",
+      "deathYear": "2019",
+      "birthPlace": "Racine, Wisconsin",
+      "notes": "CONFIRMED: obituary from Racine Journal Times (Feb 2022) and Legacy.com confirm Edward 'Bucky' Hanson was born July 21, 1930 in Racine, Wisconsin to Steven and Katherine (Jensen) Hanson. Married Nancy (Sorenson) Hanson at the home of her parents Harry and Emma Sorenson on July 22, 1950 in Racine, Wisconsin. Died in 2019. Five sons: Dr. David, Steve, Rev. Dana, Jon, and Andrew Hanson."
+    },
+    {
+      "id": "person-johanna-sorenson",
+      "firstName": "Johanna",
+      "lastName": "Sorenson",
+      "birthYear": "1889",
+      "deathYear": "1989",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Johanna Sorenson (1889–1989) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-selma-sorenson",
+      "firstName": "Selma Sissa",
+      "lastName": "Sorenson",
+      "birthYear": "1890",
+      "deathYear": "1969",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Selma Sissa Sorenson (1890–1969) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-ebba-sorenson",
+      "firstName": "Ebba Bernadotte",
+      "lastName": "Sorenson",
+      "birthYear": "1892",
+      "deathYear": "1967",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Ebba Bernadotte Sorenson (1892–1967) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-arthur-sorenson",
+      "firstName": "Arthur Julius",
+      "lastName": "Sorenson",
+      "birthYear": "1895",
+      "deathYear": "1988",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Arthur Julius Sorenson (1895–1988) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-myrtle-sorenson",
+      "firstName": "Myrtle J",
+      "lastName": "Sorenson",
+      "birthYear": "1897",
+      "deathYear": "1951",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Myrtle J Sorenson (1897–1951) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-lily-sorenson",
+      "firstName": "Lily Ann",
+      "lastName": "Sorenson",
+      "birthYear": "1900",
+      "deathYear": "1987",
+      "notes": "Likely sibling of Harry Nels Sorenson. Public FamilySearch profile for Harry Nels Sorenson (G6M4-5GR) lists Lily Ann Sorenson (1900–1987) among the children of Julius Laurentius Sørensen and Anna Olsson."
+    },
+    {
+      "id": "person-jacqueline",
+      "firstName": "Jacqueline Avis",
+      "lastName": "Langham",
+      "maidenName": "White",
+      "birthYear": "1924",
+      "deathYear": "2010",
+      "birthDate": "1924-08-10",
+      "deathDate": "2010-10-07",
+      "birthPlace": "Montesano, Grays Harbor County, Washington",
+      "deathPlace": "Montesano, Washington",
+      "notes": "CONFIRMED: exact birth/death dates per WikiTree (Langham-444). Parents: Clarence E. White (2 Oct 1893 - 4 Sep 1949, Cape Horn, Skamania, WA) and Elsie M. Hill (27 May 1902 - 1 Apr 1999, Satsop, Grays Harbor, WA). Married Edgar Donald Langham. Three daughters: Carolyn Myers, Marilyn Kenyon, Joanne Sorenson. Preceded in death by husband Edgar (2010) and son Donald Arthur Langham (2011). Five grandchildren, five great-grandchildren."
+    },
+    {
+      "id": "person-carolyn-langham",
+      "firstName": "Carolyn",
+      "lastName": "Langham",
+      "notes": "Daughter of Edgar Donald Langham and Jacqueline Avis (White) Langham. Sister of Joanne Sorenson, Marilyn Kenyon, and Donald Langham. Married Ron Myers. Per Donald Langham obituary (2011)."
+    },
+    {
+      "id": "person-marilyn-langham",
+      "firstName": "Marilyn",
+      "lastName": "Langham",
+      "notes": "Daughter of Edgar Donald Langham and Jacqueline Avis (White) Langham. Sister of Joanne Sorenson, Carolyn Myers, and Donald Langham. Married Lonnie Kenyon. Per Donald Langham obituary (2011)."
+    },
+    {
+      "id": "person-sylvanus-langham",
+      "firstName": "Sylvanus Benjamin",
+      "lastName": "Langham",
+      "birthYear": "1867",
+      "birthDate": "1867-06-23",
+      "birthPlace": "Duncansville, Blair County, Pennsylvania",
+      "deathYear": "1930",
+      "deathDate": "1930-06-27",
+      "deathPlace": "Huntington, Cabell County, West Virginia",
+      "notes": "Parent of Edgar Donald Langham. NOTE: discrepancy between sources — tree previously said died 1934 Huntington WV; WikiTree (Langham-444) says died June 27, 1930 in Duncansville, PA. Spouse: Elizabeth Stehley. Sourcing: WikiTree Donald Langham profile."
+    },
+    {
+      "id": "person-elizabeth-stehley",
+      "firstName": "Elizabeth",
+      "lastName": "Stehley",
+      "birthYear": "1880",
+      "notes": "Parent of Edgar Donald Langham. Spouse of Sylvanus Benjamin Langham. Birth estimated abt 1880 per WikiTree."
+    },
+    {
+      "id": "person-edgar",
+      "firstName": "Edgar Donald",
+      "lastName": "Langham",
+      "birthYear": "1924",
+      "deathYear": "2012",
+      "birthDate": "1924-08-25",
+      "deathDate": "2012-09-15",
+      "birthPlace": "Huntington, Cabell County, West Virginia",
+      "deathPlace": "Longview, Washington",
+      "notes": "CONFIRMED: exact birth/death dates per WikiTree (Langham-444). Born Aug. 25, 1924 in Huntington, WV; died Sept. 15, 2012 in Longview, WA; buried Satsop Cemetery. Navy veteran served in South Pacific during WWII. Worked for Northern Pacific Railroad and retired from Burlington Northern Railroad. Preceded in death by wife Jacqueline Avis (White) Langham (2010) and son Donald Arthur Langham (2011). Survived by three daughters including Joanne and Olaf Sorenson, five grandchildren, and five great-grandchildren."
+    },
+    {
+      "id": "person-donald-langham",
+      "firstName": "Donald Arthur",
+      "lastName": "Langham",
+      "birthYear": "1954",
+      "deathYear": "2011",
+      "birthDate": "1954-05-19",
+      "deathDate": "2011-05-14",
+      "birthPlace": "Centralia, Washington",
+      "notes": "Son of Edgar Donald Langham and Jacqueline Avis (White) Langham. Brother of Joanne Sorenson, Carolyn Myers, and Marilyn Kenyon. Per Donald Langham obituary (2011): born May 19, 1954 in Centralia, WA; died May 14, 2011 at home in Montesano at age 56. Preceded in death by father Edgar (2012) and mother Jacqueline (2010); survived by three sisters including Joanne Sorenson, five grandchildren, and five great-grandchildren."
+    },
+    {
+      "id": "person-clarence-white",
+      "firstName": "Clarence E.",
+      "lastName": "White",
+      "birthYear": "1893",
+      "birthDate": "1893-10-02",
+      "deathYear": "1949",
+      "deathDate": "1949-09-04",
+      "birthPlace": "Cape Horn, Skamania, Washington",
+      "deathPlace": "Washington, United States",
+      "notes": "Parent of Jacqueline Avis (White) Langham. Per WikiTree (Langham-444). Clarence E. White and Elsie M. Hill were the parents of Jacqueline Avis White."
+    },
+    {
+      "id": "person-elsie-hill",
+      "firstName": "Elsie M.",
+      "lastName": "Hill",
+      "birthYear": "1902",
+      "birthDate": "1902-05-27",
+      "deathYear": "1999",
+      "deathDate": "1999-04-01",
+      "birthPlace": "Satsop, Grays Harbor, Washington",
+      "deathPlace": "Washington, United States",
+      "notes": "Parent of Jacqueline Avis (White) Langham. Per WikiTree (Langham-444). Elsie M. Hill and Clarence E. White were the parents of Jacqueline Avis White."
+    },
+    {
+      "id": "person-henry-s-langham",
+      "firstName": "Henry S.",
+      "lastName": "Langham",
+      "birthDate": "1836-03-23",
+      "deathDate": "1916-01-20",
+      "birthPlace": "Blair County, Pennsylvania",
+      "deathPlace": "Blair County, Pennsylvania",
+      "notes": "CONFIRMED: parent of Sylvanus Benjamin Langham per WikiTree Langham-444 (Donald Arthur Langham). Born 23 Mar 1836 in Blair County, PA; died 20 Jan 1916. Married Nancy Ann (1832–1914). Parents of Sylvanus Benjamin Langham (1867–1930)."
+    },
+    {
+      "id": "person-nancy-ann-langham",
+      "firstName": "Nancy Ann",
+      "lastName": "Langham",
+      "birthDate": "1832-03-23",
+      "deathDate": "1914-01-27",
+      "birthPlace": "Indiana County, Pennsylvania",
+      "deathPlace": "Indiana County, Pennsylvania",
+      "notes": "CONFIRMED: parent of Sylvanus Benjamin Langham per WikiTree Langham-444 (Donald Arthur Langham). Born 23 Mar 1832 in Indiana County, PA; died 27 Jan 1914. Flagged in prior pass as likely missing — the missing link between Henry S. Langham (1836) and Sylvanus Benjamin Langham (1867)."
+    },
+    {
+      "id": "person-catherine-hill",
+      "firstName": "Catherine",
+      "lastName": "Hill",
+      "birthDate": "1872-10-14",
+      "deathDate": "1952-01-08",
+      "birthPlace": "Satsop, Chehalis County, Washington",
+      "deathPlace": "Washington, United States",
+      "notes": "CANDIDATE: per WikiTree Langham-444, Catherine Hill (14 Oct 1872 - 8 Jan 1952, Satsop, WA) appears as great-grandparent in Donald Langham line. Likely mother of Elsie M. Hill (1902–1999) based on dates. Parentage unconfirmed — needs 1900/1910 Satsop census for Hill family to verify."
+    }
+  ],
+  "relationships": [
+    {
+      "id": "rel-olaf-jens",
+      "type": "parent",
+      "sourceId": "person-olaf",
+      "targetId": "person-jens"
+    },
+    {
+      "id": "rel-joanne-jens",
+      "type": "parent",
+      "sourceId": "person-joanne",
+      "targetId": "person-jens"
+    },
+    {
+      "id": "rel-olaf-joanne",
+      "type": "spouse",
+      "sourceId": "person-olaf",
+      "targetId": "person-joanne"
+    },
+    {
+      "id": "rel-dale-olaf",
+      "type": "parent",
+      "sourceId": "person-dale",
+      "targetId": "person-olaf"
+    },
+    {
+      "id": "rel-elizabeth-olaf",
+      "type": "parent",
+      "sourceId": "person-elizabeth",
+      "targetId": "person-olaf"
+    },
+    {
+      "id": "rel-dale-elizabeth",
+      "type": "spouse",
+      "sourceId": "person-dale",
+      "targetId": "person-elizabeth"
+    },
+    {
+      "id": "rel-john-spies-elizabeth",
+      "type": "parent",
+      "sourceId": "person-john-spies",
+      "targetId": "person-elizabeth"
+    },
+    {
+      "id": "rel-harry-dale",
+      "type": "parent",
+      "sourceId": "person-harry-sorenson",
+      "targetId": "person-dale"
+    },
+    {
+      "id": "rel-emma-dale",
+      "type": "parent",
+      "sourceId": "person-emma-timler",
+      "targetId": "person-dale"
+    },
+    {
+      "id": "rel-harry-emma",
+      "type": "spouse",
+      "sourceId": "person-harry-sorenson",
+      "targetId": "person-emma-timler"
+    },
+    {
+      "id": "rel-julius-harry",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-harry-sorenson"
+    },
+    {
+      "id": "rel-anna-harry",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-harry-sorenson"
+    },
+    {
+      "id": "rel-soren-julius",
+      "type": "parent",
+      "sourceId": "person-soren-nielsen",
+      "targetId": "person-julius-sorenson"
+    },
+    {
+      "id": "rel-johanne-julius",
+      "type": "parent",
+      "sourceId": "person-johanne-lorentzen",
+      "targetId": "person-julius-sorenson"
+    },
+    {
+      "id": "rel-harry-nancy",
+      "type": "parent",
+      "sourceId": "person-harry-sorenson",
+      "targetId": "person-nancy-hanson"
+    },
+    {
+      "id": "rel-emma-nancy",
+      "type": "parent",
+      "sourceId": "person-emma-timler",
+      "targetId": "person-nancy-hanson"
+    },
+    {
+      "id": "rel-julius-johanna",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-johanna-sorenson"
+    },
+    {
+      "id": "rel-anna-johanna",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-johanna-sorenson"
+    },
+    {
+      "id": "rel-julius-selma",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-selma-sorenson"
+    },
+    {
+      "id": "rel-anna-selma",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-selma-sorenson"
+    },
+    {
+      "id": "rel-julius-ebba",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-ebba-sorenson"
+    },
+    {
+      "id": "rel-anna-ebba",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-ebba-sorenson"
+    },
+    {
+      "id": "rel-julius-arthur",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-arthur-sorenson"
+    },
+    {
+      "id": "rel-anna-arthur",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-arthur-sorenson"
+    },
+    {
+      "id": "rel-julius-myrtle",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-myrtle-sorenson"
+    },
+    {
+      "id": "rel-anna-myrtle",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-myrtle-sorenson"
+    },
+    {
+      "id": "rel-julius-lilyann",
+      "type": "parent",
+      "sourceId": "person-julius-sorenson",
+      "targetId": "person-lily-sorenson"
+    },
+    {
+      "id": "rel-anna-lilyann",
+      "type": "parent",
+      "sourceId": "person-anna-olsson",
+      "targetId": "person-lily-sorenson"
+    },
+    {
+      "id": "rel-jacqueline-joanne",
+      "type": "parent",
+      "sourceId": "person-jacqueline",
+      "targetId": "person-joanne"
+    },
+    {
+      "id": "rel-edgar-joanne",
+      "type": "parent",
+      "sourceId": "person-edgar",
+      "targetId": "person-joanne"
+    },
+    {
+      "id": "rel-jacqueline-edgar",
+      "type": "spouse",
+      "sourceId": "person-jacqueline",
+      "targetId": "person-edgar"
+    },
+    {
+      "id": "rel-sylvanus-langham-spouse",
+      "type": "spouse",
+      "sourceId": "person-sylvanus-langham",
+      "targetId": "person-elizabeth-stehley"
+    },
+    {
+      "id": "rel-sylvanus-edgar",
+      "type": "parent",
+      "sourceId": "person-sylvanus-langham",
+      "targetId": "person-edgar"
+    },
+    {
+      "id": "rel-elizabeth-edgar",
+      "type": "parent",
+      "sourceId": "person-elizabeth-stehley",
+      "targetId": "person-edgar"
+    },
+    {
+      "id": "rel-carolyn-edgar",
+      "type": "parent",
+      "sourceId": "person-edgar",
+      "targetId": "person-carolyn-langham"
+    },
+    {
+      "id": "rel-carolyn-jacqueline",
+      "type": "parent",
+      "sourceId": "person-jacqueline",
+      "targetId": "person-carolyn-langham"
+    },
+    {
+      "id": "rel-marilyn-edgar",
+      "type": "parent",
+      "sourceId": "person-edgar",
+      "targetId": "person-marilyn-langham"
+    },
+    {
+      "id": "rel-marilyn-jacqueline",
+      "type": "parent",
+      "sourceId": "person-jacqueline",
+      "targetId": "person-marilyn-langham"
+    },
+    {
+      "id": "rel-donald-edgar",
+      "type": "parent",
+      "sourceId": "person-edgar",
+      "targetId": "person-donald-langham"
+    },
+    {
+      "id": "rel-donald-jacqueline",
+      "type": "parent",
+      "sourceId": "person-jacqueline",
+      "targetId": "person-donald-langham"
+    },
+    {
+      "id": "rel-clarence-jacqueline",
+      "type": "parent",
+      "sourceId": "person-clarence-white",
+      "targetId": "person-jacqueline"
+    },
+    {
+      "id": "rel-elsie-jacqueline",
+      "type": "parent",
+      "sourceId": "person-elsie-hill",
+      "targetId": "person-jacqueline"
+    },
+    {
+      "id": "rel-clarence-elsie",
+      "type": "spouse",
+      "sourceId": "person-clarence-white",
+      "targetId": "person-elsie-hill"
+    },
+    {
+      "id": "rel-bucky-nancy",
+      "type": "spouse",
+      "sourceId": "person-bucky-hanson",
+      "targetId": "person-nancy-hanson"
+    },
+    {
+      "id": "rel-nancy-bucky",
+      "type": "spouse",
+      "sourceId": "person-nancy-hanson",
+      "targetId": "person-bucky-hanson"
+    },
+    {
+      "id": "rel-henry-langham-sylvanus",
+      "type": "parent",
+      "sourceId": "person-henry-s-langham",
+      "targetId": "person-sylvanus-langham"
+    },
+    {
+      "id": "rel-nancyann-langham-sylvanus",
+      "type": "parent",
+      "sourceId": "person-nancy-ann-langham",
+      "targetId": "person-sylvanus-langham"
+    },
+    {
+      "id": "rel-catherine-elsie",
+      "type": "parent",
+      "sourceId": "person-catherine-hill",
+      "targetId": "person-elsie-hill"
+    }
+  ]
+}
