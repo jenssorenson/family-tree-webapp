@@ -1,5 +1,6 @@
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
+  forceCollide,
   forceLink,
   forceManyBody,
   forceSimulation,
@@ -11,7 +12,7 @@ import {
 } from 'd3-force';
 import { hierarchy, tree, type HierarchyNode } from 'd3-hierarchy';
 import { select } from 'd3-selection';
-import { drag } from 'd3-drag';
+import { zoom, zoomIdentity, type ZoomBehavior } from 'd3-zoom';
 import type { Person, TreeData, Relationship } from './types';
 import './D3TreeViz.css';
 
@@ -23,6 +24,7 @@ type TreeNode = SimulationNodeDatum & {
 };
 
 type TreeLink = SimulationLinkDatum<TreeNode> & {
+  key: string;
   source: TreeNode | string;
   target: TreeNode | string;
 };
@@ -34,9 +36,23 @@ interface D3TreeVizProps {
 }
 
 const NODE_RADIUS = 28;
-const TREE_H_GAP = 110;
-const TREE_V_GAP = 130;
+const NODE_COLLISION_RADIUS = NODE_RADIUS + 8; // gentle overlap prevention only
+const TREE_H_GAP = 200;
+const TREE_V_GAP = 240;
 const SVG_PADDING = 80;
+const FIT_PADDING = 48;
+const MIN_VIEWPORT_HEIGHT = 420;
+const LINK_DISTANCE = TREE_V_GAP * 0.95;
+const LINK_STRENGTH = 0.75;
+const CHARGE_STRENGTH = 0; // disabled — tree layout is authority, not many-body
+const COLLIDE_STRENGTH = 0.8;
+const COLLIDE_ITERATIONS = 3;
+const Y_LOCK_STRENGTH = 1;
+const X_ANCHOR_STRENGTH = 0.06;
+const PARENT_CHILD_X_PULL = 1.4;
+const PARENT_CHILD_Y_ENFORCEMENT = 2.2;
+const SIM_ALPHA_DECAY = 0.015;
+const SIM_VELOCITY_DECAY = 0.5;
 
 const getNodeLabel = (person: Person): string => {
   const name = `${person.firstName} ${person.lastName}`.trim();
@@ -132,10 +148,15 @@ const computeTreeLayout = (
 
   const flatNodes: FlatNode[] = [];
   const seenIds = new Set<string>();
+  const subtreeWidth = (node: HierarchyNode<HierNode>) => Math.max(node.leaves().length, 1);
 
   const treeLayout = tree<HierNode>()
     .nodeSize([TREE_H_GAP, TREE_V_GAP])
-    .separation((a, b) => (a.parent === b.parent ? 1 : 1.3));
+    .separation((a, b) => {
+      const siblingSpread = a.parent === b.parent ? 1.35 : 2.1;
+      const breadthWeight = Math.min(subtreeWidth(a) + subtreeWidth(b), 8) * 0.12;
+      return siblingSpread + breadthWeight;
+    });
 
   // Assign horizontal offsets per root so multiple trees don't overlap
   const rootOffsets = new Map<number, number>();
@@ -143,8 +164,8 @@ const computeTreeLayout = (
 
   for (let ri = 0; ri < roots.length; ri++) {
     rootOffsets.set(ri, nextOffset);
-    const count = roots[ri].descendants().length;
-    nextOffset += count * TREE_H_GAP * 1.2 + TREE_H_GAP * 2;
+    const breadth = subtreeWidth(roots[ri]);
+    nextOffset += Math.max(breadth * TREE_H_GAP * 2.2, TREE_H_GAP * 3.5);
   }
 
   for (let ri = 0; ri < roots.length; ri++) {
@@ -175,205 +196,268 @@ const computeTreeLayout = (
   return { flatNodes, totalWidth, totalHeight };
 };
 
-export const D3TreeViz = ({ tree, selectedPersonId, onPersonClick }: D3TreeVizProps) => {
-  const svgRef = useRef<SVGSVGElement>(null);
-  const simRef = useRef<Simulation<TreeNode, TreeLink> | null>(null);
-  const nodesRef = useRef<TreeNode[]>([]);
+const buildLinks = (relationships: Relationship[], nodeIds: Set<string>): TreeLink[] => {
+  const added = new Set<string>();
+  const links: TreeLink[] = [];
 
-  const buildLinks = useCallback(
-    (relationships: Relationship[], _collapsedRep: Map<string, string>) => {
-      const added = new Set<string>();
-      const links: TreeLink[] = [];
+  for (const rel of relationships) {
+    if (rel.type !== 'parent') continue;
+    const sourceId = rel.sourceId;
+    const targetId = rel.targetId;
+    if (sourceId === targetId) continue;
+    if (!nodeIds.has(sourceId) || !nodeIds.has(targetId)) continue;
 
-      for (const rel of relationships) {
-        if (rel.type !== 'parent') continue;
-        const sr = rel.sourceId;
-        const tr = rel.targetId;
-        if (sr === tr) continue;
+    const key = `${sourceId}--${targetId}`;
+    if (added.has(key)) continue;
+    added.add(key);
 
-        const key = [sr, tr].sort().join('--');
-        if (added.has(key)) continue;
-        added.add(key);
+    links.push({ key, source: sourceId, target: targetId });
+  }
 
-        links.push({ source: sr, target: tr });
-      }
-      return links;
-    },
-    [],
+  return links;
+};
+
+const buildGraphModel = (tree: TreeData) => {
+  const { roots, collapsedRep } = buildHierarchyForest(tree.people, tree.relationships);
+  const svgWidth = Math.max(900, tree.people.length * 55);
+  const { flatNodes, totalWidth, totalHeight } = computeTreeLayout(roots, svgWidth);
+  const nodes: TreeNode[] = flatNodes.map((node) => ({
+    id: node.id,
+    person: node.person,
+    treeX: node.treeX,
+    treeY: node.treeY,
+    x: node.treeX,
+    y: node.treeY,
+  }));
+  const nodeIds = new Set(nodes.map((node) => node.id));
+  const links = buildLinks(tree.relationships, nodeIds);
+
+  return { collapsedRep, nodes, links, totalWidth, totalHeight };
+};
+
+const forceParentChildConstraint = (links: TreeLink[]) => {
+  let nodesById = new Map<string, TreeNode>();
+
+  const resolveNode = (node: TreeNode | string) => (
+    typeof node === 'string' ? nodesById.get(node) ?? null : node
   );
 
-  useEffect(() => {
-    if (!svgRef.current || !tree.people.length) return;
+  const force = (alpha: number) => {
+    for (const link of links) {
+      const parent = resolveNode(link.source);
+      const child = resolveNode(link.target);
+      if (!parent || !child) continue;
 
-    const { roots, collapsedRep } = buildHierarchyForest(tree.people, tree.relationships);
-    if (!roots.length) return;
+      const desiredYGap = Math.max(child.treeY - parent.treeY, TREE_V_GAP * 0.9);
+      const parentY = parent.y ?? parent.treeY;
+      const childY = child.y ?? child.treeY;
+      const currentYGap = childY - parentY;
 
-    const SVG_W = Math.max(900, tree.people.length * 55);
-    const { flatNodes, totalWidth, totalHeight } = computeTreeLayout(roots, SVG_W);
-
-    // Compute visiblePeople inside the effect (collapsedRep is in scope here)
-    const seenReps = new Set<string>();
-    const visiblePeople: Person[] = [];
-    for (const p of tree.people) {
-      const rep = collapsedRep.get(p.id) ?? p.id;
-      if (!seenReps.has(rep)) {
-        seenReps.add(rep);
-        visiblePeople.push(p);
+      if (currentYGap < desiredYGap) {
+        const correction = ((desiredYGap - currentYGap) * PARENT_CHILD_Y_ENFORCEMENT * alpha) / 2;
+        parent.y = parentY - correction;
+        child.y = childY + correction;
+        parent.vy = (parent.vy ?? 0) - correction * 0.35;
+        child.vy = (child.vy ?? 0) + correction * 0.35;
       }
+
+      const parentX = parent.x ?? parent.treeX;
+      const childX = child.x ?? child.treeX;
+      const midpointX = (parentX + childX) / 2;
+      const xAdjustment = (parentX - childX) * PARENT_CHILD_X_PULL * alpha * 0.5;
+
+      parent.x = midpointX + xAdjustment * 0.25;
+      child.x = midpointX - xAdjustment * 0.25;
+      parent.vx = (parent.vx ?? 0) - xAdjustment * 0.18;
+      child.vx = (child.vx ?? 0) + xAdjustment * 0.18;
     }
+  };
 
-    const svg = select(svgRef.current);
-    svg.attr('width', totalWidth).attr('height', totalHeight).attr('viewBox', `0 0 ${totalWidth} ${totalHeight}`);
+  force.initialize = (nodes: TreeNode[]) => {
+    nodesById = new Map(nodes.map((node) => [node.id, node]));
+  };
 
-    // Create simulation nodes
-    const simNodes: TreeNode[] = flatNodes.map((fn) => ({
-      id: fn.id,
-      person: fn.person,
-      treeX: fn.treeX,
-      treeY: fn.treeY,
-      x: fn.treeX,
-      y: fn.treeY,
-    }));
+  return force;
+};
 
-    nodesRef.current = simNodes;
+const enforceHierarchyOrder = (links: TreeLink[]) => {
+  for (const link of links) {
+    const parent = typeof link.source === 'string' ? null : link.source;
+    const child = typeof link.target === 'string' ? null : link.target;
+    if (!parent || !child) continue;
 
-    const links = buildLinks(tree.relationships, collapsedRep);
-
-    // Guard: skip simulation if no valid links or nodes
-    if (!visiblePeople.length || !links.length) {
-      nodesRef.current = simNodes;
-      return;
+    const minChildY = (parent.y ?? parent.treeY) + Math.max(child.treeY - parent.treeY, TREE_V_GAP * 0.9);
+    if ((child.y ?? child.treeY) < minChildY) {
+      child.y = minChildY;
+      child.vy = Math.max(child.vy ?? 0, 0);
     }
+  }
+};
 
-    // Stop previous simulation
+export const D3TreeViz = ({ tree, selectedPersonId, onPersonClick }: D3TreeVizProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const viewportRef = useRef<SVGGElement>(null);
+  const simRef = useRef<Simulation<TreeNode, TreeLink> | null>(null);
+  const zoomRef = useRef<ZoomBehavior<SVGSVGElement, unknown> | null>(null);
+  const [viewportSize, setViewportSize] = useState({ width: 1, height: MIN_VIEWPORT_HEIGHT });
+
+  const { collapsedRep, nodes, links } = useMemo(() => buildGraphModel(tree), [tree]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const updateViewportSize = () => {
+      const nextWidth = Math.max(container.clientWidth, 1);
+      const nextHeight = Math.max(container.clientHeight, MIN_VIEWPORT_HEIGHT);
+      setViewportSize((current) => (
+        current.width === nextWidth && current.height === nextHeight
+          ? current
+          : { width: nextWidth, height: nextHeight }
+      ));
+    };
+
+    updateViewportSize();
+    const observer = new ResizeObserver(updateViewportSize);
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     if (simRef.current) {
       simRef.current.stop();
+      simRef.current = null;
     }
 
-    const sim = forceSimulation<TreeNode, TreeLink>(simNodes)
+    if (!svgRef.current || !viewportRef.current || !nodes.length) return;
+
+    const svg = select(svgRef.current);
+    const viewport = select(viewportRef.current);
+    const { width, height } = viewportSize;
+    svg.attr('width', width).attr('height', height).attr('viewBox', `0 0 ${width} ${height}`);
+
+    const zoomBehavior = zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.15, 4])
+      .on('zoom', (event) => {
+        viewport.attr('transform', event.transform.toString());
+      });
+
+    zoomRef.current = zoomBehavior;
+    svg.call(zoomBehavior).on('dblclick.zoom', null);
+
+    const linkSelection = viewport
+      .select<SVGGElement>('.links-layer')
+      .selectAll<SVGLineElement, TreeLink>('.tree-link')
+      .data(links);
+    const nodeSelection = viewport
+      .select<SVGGElement>('.nodes-layer')
+      .selectAll<SVGGElement, TreeNode>('.tree-node')
+      .data(nodes);
+
+    const render = () => {
+      enforceHierarchyOrder(links);
+
+      linkSelection.each(function (d) {
+        const source = typeof d.source === 'string' ? null : d.source;
+        const target = typeof d.target === 'string' ? null : d.target;
+        select(this)
+          .attr('x1', source?.x ?? 0)
+          .attr('y1', source?.y ?? 0)
+          .attr('x2', target?.x ?? 0)
+          .attr('y2', target?.y ?? 0);
+      });
+
+      nodeSelection.attr('transform', (d) => `translate(${d.x ?? d.treeX},${d.y ?? d.treeY})`);
+    };
+
+    render();
+
+    const fitToScreen = () => {
+      if (!viewportRef.current || !zoomRef.current) return;
+
+      const bounds = viewportRef.current.getBBox();
+      if (!Number.isFinite(bounds.width) || !Number.isFinite(bounds.height) || bounds.width === 0 || bounds.height === 0) {
+        return;
+      }
+
+      const scale = Math.min(
+        4,
+        0.95 / Math.max(
+          (bounds.width + FIT_PADDING * 2) / width,
+          (bounds.height + FIT_PADDING * 2) / height,
+        ),
+      );
+      const translateX = width / 2 - scale * (bounds.x + bounds.width / 2);
+      const translateY = height / 2 - scale * (bounds.y + bounds.height / 2);
+      const nextTransform = zoomIdentity.translate(translateX, translateY).scale(scale);
+
+      svg.call(zoomRef.current.transform, nextTransform);
+    };
+
+    requestAnimationFrame(fitToScreen);
+
+    if (!links.length) {
+      return () => {
+        svg.on('.zoom', null);
+      };
+    }
+
+    const sim = forceSimulation<TreeNode, TreeLink>(nodes)
       .force(
         'link',
         forceLink<TreeNode, TreeLink>(links)
           .id((d) => d.id)
-          .distance(TREE_V_GAP * 0.8)
-          .strength(0.5),
+          .distance(LINK_DISTANCE)
+          .strength(LINK_STRENGTH),
       )
-      .force('charge', forceManyBody<TreeNode>().strength(-500).distanceMin(50).distanceMax(650))
-      .force('y', forceY<TreeNode>().strength(0.1).y((d) => d.treeY))
-      .force('x', forceX<TreeNode>(totalWidth / 2).strength(0.03))
-      .alphaDecay(0.028)
-      .velocityDecay(0.38);
+      .force('parentChildConstraint', forceParentChildConstraint(links))
+      .force(
+        'charge',
+        forceManyBody<TreeNode>()
+          .strength(CHARGE_STRENGTH)
+          .distanceMin(NODE_COLLISION_RADIUS * 1.4)
+          .distanceMax(TREE_H_GAP * 6),
+      )
+      .force(
+        'collide',
+        forceCollide<TreeNode>(NODE_COLLISION_RADIUS)
+          .iterations(COLLIDE_ITERATIONS)
+          .strength(COLLIDE_STRENGTH),
+      )
+      .force('y', forceY<TreeNode>().strength(Y_LOCK_STRENGTH).y((d) => d.treeY))
+      .force('x', forceX<TreeNode>().strength(X_ANCHOR_STRENGTH).x((d) => d.treeX))
+      .alphaDecay(SIM_ALPHA_DECAY)
+      .velocityDecay(SIM_VELOCITY_DECAY);
 
     simRef.current = sim;
 
     let renderTickCount = 0;
     const MAX_RENDER_TICKS = 500;
 
-    const render = () => {
+    const renderTick = () => {
       if (renderTickCount++ > MAX_RENDER_TICKS) return;
       try {
-        svg.select('.links-layer')
-          .selectAll<SVGLineElement, TreeLink>('.tree-link')
-          .each(function (d) {
-            if (d == null) return;
-            const src = (d as any).source;
-            const tgt = (d as any).target;
-            if (src == null || tgt == null) return;
-            select(this)
-              .attr('x1', src.x ?? 0)
-              .attr('y1', src.y ?? 0)
-              .attr('x2', tgt.x ?? 0)
-              .attr('y2', tgt.y ?? 0);
-          });
-
-        svg.select('.nodes-layer')
-          .selectAll<SVGGElement, TreeNode>('.tree-node')
-          .attr('transform', (d) => {
-            if (d == null) return 'translate(0,0)';
-            return `translate(${d.x ?? 0},${d.y ?? 0})`;
-          });
+        render();
       } catch (err) {
         console.error('[D3TreeViz] render error:', err);
       }
     };
 
-    sim.on('tick', render);
-
-    // Setup drag
-    const dragHandler = drag<SVGGElement, TreeNode>()
-      .on('start', (event, d) => {
-        if (!event.active) sim.alphaTarget(0.3).restart();
-        d.fx = d.x;
-        d.fy = d.y;
-      })
-      .on('drag', (event, d) => {
-        d.fx = event.x;
-        d.fy = event.y;
-      })
-      .on('end', (event, d) => {
-        if (!event.active) sim.alphaTarget(0);
-        d.fx = null;
-        d.fy = null;
-      });
-
-    svg.select<SVGGElement>('.nodes-layer')
-      .selectAll<SVGGElement, TreeNode>('.tree-node')
-      .call(dragHandler as never);
-
-    render();
+    sim.on('tick', renderTick);
 
     return () => {
       sim.on('tick', null);
+      sim.stop();
+      svg.on('.zoom', null);
     };
-  }, [tree, buildLinks]);
-
-  // Build static structure
-  let roots: ReturnType<typeof buildHierarchyForest>['roots'] = [];
-  let collapsedRep = new Map<string, string>();
-  let SVG_W = 900;
-  let totalWidth = 900;
-  let totalHeight = 600;
-  let visiblePeople: Person[] = [];
-  let linkData: Array<{ key: string; source: string; target: string }> = [];
-
-  try {
-    ({ roots, collapsedRep } = buildHierarchyForest(tree.people, tree.relationships));
-    SVG_W = Math.max(900, tree.people.length * 55);
-    ({ totalWidth, totalHeight } = computeTreeLayout(roots, SVG_W));
-
-    // Visible people (one per unique id)
-    const seenReps = new Set<string>();
-    for (const p of tree.people) {
-      const rep = collapsedRep.get(p.id) ?? p.id;
-      if (!seenReps.has(rep)) {
-        seenReps.add(rep);
-        visiblePeople.push(p);
-      }
-    }
-
-    // Build links for rendering
-    const addedLinks = new Set<string>();
-    for (const rel of tree.relationships) {
-      if (rel.type !== 'parent') continue;
-      const sr = rel.sourceId;
-      const tr = rel.targetId;
-      if (sr === tr) continue;
-      const key = [sr, tr].sort().join('--');
-      if (addedLinks.has(key)) continue;
-      addedLinks.add(key);
-      linkData.push({ key, source: sr, target: tr });
-    }
-  } catch (err) {
-    console.error('[D3TreeViz] render setup error:', err);
-  }
+  }, [links, nodes, viewportSize]);
 
   return (
-    <div className="d3-tree-viz">
+    <div ref={containerRef} className="d3-tree-viz">
       <svg
         ref={svgRef}
-        width={totalWidth}
-        height={totalHeight}
-        viewBox={`0 0 ${totalWidth} ${totalHeight}`}
         className="d3-tree-svg"
       >
         <defs>
@@ -390,57 +474,60 @@ export const D3TreeViz = ({ tree, selectedPersonId, onPersonClick }: D3TreeVizPr
           </marker>
         </defs>
 
-        <g className="links-layer">
-          {linkData.map(({ key, source, target }) => (
-            <line
-              key={key}
-              className="tree-link"
-              data-source={source}
-              data-target={target}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="0"
-              markerEnd="url(#tree-arrow)"
-            />
-          ))}
-        </g>
+        <g ref={viewportRef} className="tree-viewport">
+          <g className="links-layer">
+            {links.map(({ key, source, target }) => (
+              <line
+                key={key}
+                className="tree-link"
+                data-source={typeof source === 'string' ? source : source.id}
+                data-target={typeof target === 'string' ? target : target.id}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="0"
+                markerEnd="url(#tree-arrow)"
+              />
+            ))}
+          </g>
 
-        <g className="nodes-layer">
-          {visiblePeople.map((person) => {
-            const rep = collapsedRep.get(person.id) ?? person.id;
-            const isSelected = selectedPersonId === person.id;
-            return (
-              <g
-                key={rep}
-                className={`tree-node${isSelected ? ' tree-node--selected' : ''}`}
-                data-id={rep}
-                transform="translate(0,0)"
-                onClick={() => onPersonClick?.(person.id)}
-                role="button"
-                aria-label={`${person.firstName} ${person.lastName}`}
-              >
-                <rect
-                  x={-(NODE_RADIUS + 14)}
-                  y={-(NODE_RADIUS + 14)}
-                  width={(NODE_RADIUS + 14) * 2}
-                  height={(NODE_RADIUS + 14) * 2}
-                  rx="18"
-                  className="tree-node-bg"
-                />
-                <circle r={NODE_RADIUS} className="tree-node-circle" />
-                <text y={NODE_RADIUS + 20} textAnchor="middle" className="tree-node-name">
-                  {getNodeLabel(person)}
-                </text>
-                {(person.birthYear || person.deathYear) && (
-                  <text y={NODE_RADIUS + 36} textAnchor="middle" className="tree-node-years">
-                    {person.birthYear || '?'}
-                    {person.deathYear ? ` – ${person.deathYear}` : ''}
+          <g className="nodes-layer">
+            {nodes.map((node) => {
+              const rep = collapsedRep.get(node.id) ?? node.id;
+              const isSelected = selectedPersonId === node.id;
+              const person = node.person;
+              return (
+                <g
+                  key={rep}
+                  className={`tree-node${isSelected ? ' tree-node--selected' : ''}`}
+                  data-id={rep}
+                  transform="translate(0,0)"
+                  onClick={() => onPersonClick?.(node.id)}
+                  role="button"
+                  aria-label={`${person.firstName} ${person.lastName}`}
+                >
+                  <rect
+                    x={-(NODE_RADIUS + 14)}
+                    y={-(NODE_RADIUS + 14)}
+                    width={(NODE_RADIUS + 14) * 2}
+                    height={(NODE_RADIUS + 14) * 2}
+                    rx="18"
+                    className="tree-node-bg"
+                  />
+                  <circle r={NODE_RADIUS} className="tree-node-circle" />
+                  <text y={NODE_RADIUS + 20} textAnchor="middle" className="tree-node-name">
+                    {getNodeLabel(person)}
                   </text>
-                )}
-              </g>
-            );
-          })}
+                  {(person.birthYear || person.deathYear) && (
+                    <text y={NODE_RADIUS + 36} textAnchor="middle" className="tree-node-years">
+                      {person.birthYear || '?'}
+                      {person.deathYear ? ` – ${person.deathYear}` : ''}
+                    </text>
+                  )}
+                </g>
+              );
+            })}
+          </g>
         </g>
       </svg>
     </div>

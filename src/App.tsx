@@ -74,7 +74,7 @@ function App() {
   const [saveError, setSaveError] = useState<string>('');
   const [, setIsSaving] = useState(false);
   const [, setLastSavedAt] = useState<string>('');
-  const [_recentlyUpdatedIds, setRecentlyUpdatedIds] = useState<string[]>([]);
+  const [, setRecentlyUpdatedIds] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const hasHydratedRef = useRef(false);
   const saveTimerRef = useRef<number | null>(null);

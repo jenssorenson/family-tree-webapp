@@ -295,7 +295,7 @@ button.small {
 }
 
 .flow-wrap.d3-tree-wrap {
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
 }
@@ -303,7 +303,7 @@ button.small {
 .flow-wrap.d3-tree-wrap .d3-tree-viz {
   flex: 1;
   border-radius: 20px;
-  overflow: auto;
+  overflow: hidden;
   min-height: 0;
   border: none;
   box-shadow: none;
