@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:5173",
+  "timestamp": "2026-03-28T06:58:44.796Z",
+  "captures": [
+    "qa-2026-03-28T06-58-35-overview.png",
+    "qa-2026-03-28T06-58-35-detail.png"
+  ],
+  "treeBounds": {
+    "bbox": {},
+    "rect": {}
+  }
+}

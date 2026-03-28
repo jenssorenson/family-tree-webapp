@@ -20,11 +20,11 @@
   cursor: grabbing;
 }
 
-/* Link styling */
+/* Link styling — orthogonal elbow connectors */
 .tree-link {
   stroke: #5b8cff;
   stroke-width: 2;
-  stroke-opacity: 0.65;
+  stroke-opacity: 0.6;
   fill: none;
   transition: stroke-opacity 200ms;
 }
@@ -39,57 +39,78 @@
   cursor: pointer;
 }
 
-.tree-node-circle {
+.tree-node-card {
   fill: white;
+  stroke: #b8c4e0;
+  stroke-width: 1.5;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
+  transition: stroke 150ms, stroke-width 150ms, filter 150ms;
+}
+
+.tree-node:hover .tree-node-card {
   stroke: #5b8cff;
   stroke-width: 2;
-  transition: stroke 150ms, fill 150ms;
+  filter: drop-shadow(0 4px 10px rgba(91, 140, 255, 0.25));
 }
 
-.tree-node-bg {
-  fill: white;
-  stroke: #cfd6e7;
-  stroke-width: 1;
-  opacity: 0;
-  transition: opacity 150ms;
-}
-
-.tree-node:hover .tree-node-circle {
+.tree-node--selected .tree-node-card {
   fill: #eef3ff;
   stroke: #3d67d7;
-}
-
-.tree-node:hover .tree-node-bg {
-  opacity: 1;
-}
-
-.tree-node--selected .tree-node-circle {
-  fill: #dce8ff;
-  stroke: #3d67d7;
   stroke-width: 2.5;
+  filter: drop-shadow(0 0 14px rgba(61, 103, 215, 0.5));
 }
 
-.tree-node--selected .tree-node-bg {
-  opacity: 1;
-  stroke: #5b8cff;
-  stroke-width: 1.5;
-}
-
-/* Name text */
+/* Name text inside card */
 .tree-node-name {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   fill: #10203a;
   font-family: inherit;
   pointer-events: none;
-  letter-spacing: 0.01em;
 }
 
-/* Year text */
+/* Year text inside card */
 .tree-node-years {
-  font-size: 9.5px;
-  font-weight: 500;
-  fill: #5b6b86;
+  font-size: 10px;
+  font-weight: 600;
+  fill: #4b5563;
   font-family: inherit;
   pointer-events: none;
+}
+
+/* Zoom controls */
+.zoom-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  z-index: 10;
+}
+
+.zoom-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: white;
+  border: 1px solid #cfd6e7;
+  color: #3d67d7;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: background 150ms, border-color 150ms;
+}
+
+.zoom-btn:hover {
+  background: #eef3ff;
+  border-color: #3d67d7;
+}
+
+.zoom-btn:active {
+  background: #dce8ff;
 }
