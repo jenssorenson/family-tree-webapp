@@ -36,9 +36,9 @@ interface D3TreeVizProps {
 }
 
 const NODE_RADIUS = 28;
-const NODE_COLLISION_RADIUS = NODE_RADIUS + 8; // gentle overlap prevention only
-const TREE_H_GAP = 200;
-const TREE_V_GAP = 240;
+const NODE_COLLISION_RADIUS = NODE_RADIUS + 22; // breathing room around each node
+const TREE_H_GAP = 280;
+const TREE_V_GAP = 260;
 const SVG_PADDING = 80;
 const FIT_PADDING = 48;
 const MIN_VIEWPORT_HEIGHT = 420;
